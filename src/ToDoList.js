@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Todo from './Todo';
 import NewTodoForm from './NewTodoForm';
+import './TodoList.css';
 
 export class ToDoList extends Component {
 	constructor(props) {
@@ -10,6 +11,7 @@ export class ToDoList extends Component {
 		};
 		this.create = this.create.bind(this);
 		this.remove = this.remove.bind(this);
+		this.update = this.update.bind(this);
 	}
 
 	create(newTodo) {
@@ -22,12 +24,24 @@ export class ToDoList extends Component {
 			todos: this.state.todos.filter((todo) => todo.id !== id)
 		});
 	}
+
+	update(id, updatedTask) {
+		const updatedTodos = this.state.todos.map((todo) => {
+			if (todo.id === id) {
+				return { ...todo, task: updatedTask };
+			}
+			return todo;
+		});
+		this.setState({ todos: updatedTodos });
+	}
 	render() {
 		const todos = this.state.todos.map((todo) => {
-			return <Todo id={todo.id} key={todo.id} task={todo.task} removeTodo={this.remove} />;
+			return (
+				<Todo id={todo.id} key={todo.id} task={todo.task} removeTodo={this.remove} updateTodo={this.update} />
+			);
 		});
 		return (
-			<div>
+			<div className="TodoList">
 				<h1>My ToDo List</h1>
 				<NewTodoForm createTodo={this.create} />
 				<ul>{todos}</ul>
